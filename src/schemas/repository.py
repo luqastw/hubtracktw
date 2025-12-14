@@ -11,7 +11,7 @@ class RepositoryCreate(RepositoryBase):
 
 class RepositoryResponse(RepositoryBase):
     id: int
-    create_at: datetime | None
+    created_at: datetime | None
     last_analyzed_at: datetime | None
 
     model_config = ConfigDict(from_attributes=True)
