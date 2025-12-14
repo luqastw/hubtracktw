@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -7,6 +8,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_DB: str
     REDIS_URL: str
+    ENVIROMENT: Literal['development', 'production'] = 'development'
 
     @property
     def DATABASE_URL(self):
