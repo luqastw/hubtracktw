@@ -11,5 +11,8 @@ class RepositoryModel(Base):
     name: Mapped[str] = mapped_column()
     owner: Mapped[str] = mapped_column()
     url: Mapped[str] = mapped_column()
+    description: Mapped[str | None] = mapped_column()
+    stars: Mapped[int] = mapped_column(default=0)
+    language: Mapped[str | None] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     last_analyzed_at: Mapped[datetime | None] = mapped_column(nullable=True)

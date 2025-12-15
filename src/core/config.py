@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_DB: str
     REDIS_URL: str
-    ENVIROMENT: Literal['development', 'production'] = 'development'
+    ENVIRONMENT: Literal['development', 'production'] = 'development'
 
     @property
     def DATABASE_URL(self):
