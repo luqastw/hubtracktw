@@ -13,7 +13,7 @@ async def create_repository(repo_in: RepositoryCreate, db: SessionDep):
     query = select(RepositoryModel).where(RepositoryModel.url == repo_in.url)
     existing = await db.execute(query)
     if existing.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail='This repository has already registred.')
+        raise HTTPException(status_code=400, detail='This repository has already registered.')
     
     gh_client = GitHubClient()
     owner, name = gh_client.extract_owner_and_name(repo_in.url)
