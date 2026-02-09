@@ -19,3 +19,4 @@ htmlcov/
 .mypy_cache/
 .DS_Store
 Thumbs.db
+*.egg-info
