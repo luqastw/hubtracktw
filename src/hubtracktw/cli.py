@@ -4,6 +4,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich import box
 import typer
+import httpx
 
 from hubtracktw.client import GitHubClient
 
@@ -13,6 +14,21 @@ console = Console()
 FILLED = "▓"
 EMPTY = "░"
 BAR_WIDTH = 10
+
+
+def _parse_repo(repo: str) -> tuple[str, str]:
+    if "/" in repo:
+        if repo.startswith("http"):
+            repo = repo.rstrip("/")
+            parses = repo.rsplit("/", 2)
+            owner = parses[1]
+            name = parses[2]
+            return owner, name
+        else:
+            owner, name = repo.split("/")
+            return owner, name
+    else:
+        raise ValueError(f"Invalid format: {repo}. Use 'owner/name' or a GitHub URL.")
 
 
 def _format_number(n: int) -> str:
@@ -49,24 +65,26 @@ def ping():
 
 @app.command()
 def analyze(repo: str):
-    owner, name = repo.split("/")
+    owner, name = _parse_repo(repo)
     client = GitHubClient("https://api.github.com")
 
     with console.status("[bold green]Fetching data from GitHub..."):
-        repo_data = client.get_repo(owner, name)
+        try:
+            repo_data = client.get_repo(owner, name)
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                console.print("[red]Repository not found.[/red]")
+                raise typer.Exit(1)
 
-    # --- Header ---
     title = Text()
     title.append(f"  {repo_data.full_name.upper()}", style="bold cyan")
     if repo_data.archived:
         title.append("  [ARCHIVED]", style="bold red")
 
-    # --- Description ---
     sections = []
     if repo_data.description:
         sections.append(f"  [dim]{repo_data.description}[/dim]\n")
 
-    # --- Languages table ---
     if repo_data.languages:
         total_bytes = sum(repo_data.languages.values())
         lang_table = Table(
@@ -91,7 +109,6 @@ def analyze(repo: str):
 
         sections.append("  [bold white]CODEBASE[/bold white]")
 
-    # --- Activity ---
     activity_line = (
         f"  [bold white]ACTIVITY[/bold white]\n"
         f"  Last push: [cyan]{_time_ago(repo_data.pushed_at)}[/cyan]  │  "
@@ -99,7 +116,6 @@ def analyze(repo: str):
         f"Branch: [cyan]{repo_data.default_branch}[/cyan]"
     )
 
-    # --- Footer stats ---
     release_tag = repo_data.latest_release or "N/A"
     footer = (
         f"  👥 Contributors: [bold]{repo_data.contributors_count}[/bold]  │  "
@@ -109,7 +125,6 @@ def analyze(repo: str):
         f"📦 [bold]{release_tag}[/bold]"
     )
 
-    # --- Render ---
     output = Text()
     panel_content = "\n".join(sections)
     panel_content += "\n"
@@ -125,7 +140,5 @@ def analyze(repo: str):
 
     console.print(activity_line)
     console.print()
-    console.print(
-        Panel(footer, box=box.HEAVY, style="dim", expand=True)
-    )
+    console.print(Panel(footer, box=box.HEAVY, style="dim", expand=True))
     console.print()
