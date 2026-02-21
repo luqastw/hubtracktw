@@ -64,7 +64,7 @@ def ping():
 
 
 @app.command()
-def analyze(repo: str):
+def track(repo: str):
     owner, name = _parse_repo(repo)
     client = GitHubClient("https://api.github.com")
 
