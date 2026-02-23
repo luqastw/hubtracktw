@@ -19,14 +19,15 @@ pip install -e .
 ## Usage
 
 ```bash
-hubtracktw analyze owner/repo or GitHub URL
+hubtracktw track owner/repo or GitHub URL
 ```
 
 Example:
 
 ```bash
-hubtracktw analyze torvalds/linux
+hubtracktw track torvalds/linux
 ```
+
 ```bash
-hubtracktw analyze https://github.com/torvalds/linux
+hubtracktw track https://github.com/torvalds/linux
 ```
