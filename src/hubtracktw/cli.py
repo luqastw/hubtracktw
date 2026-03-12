@@ -1,3 +1,6 @@
+from datetime import datetime, timezone
+import os
+
 from rich.table import Table
 from rich.console import Console
 from rich.panel import Panel
@@ -45,8 +48,6 @@ def _progress_bar(percentage: float) -> str:
 
 
 def _time_ago(iso_date: str) -> str:
-    from datetime import datetime, timezone
-
     dt = datetime.fromisoformat(iso_date.replace("Z", "+00:00"))
     delta = datetime.now(timezone.utc) - dt
     if delta.days > 365:
@@ -66,7 +67,7 @@ def ping():
 @app.command()
 def track(repo: str):
     owner, name = _parse_repo(repo)
-    client = GitHubClient("https://api.github.com")
+    client = GitHubClient("https://api.github.com", token=os.getenv("GITHUB_TOKEN"))
 
     with console.status("[bold green]Fetching data from GitHub..."):
         try:
@@ -124,10 +125,6 @@ def track(repo: str):
         f"🐛 Issues: [bold]{_format_number(repo_data.open_issues)}[/bold]  │  "
         f"📦 [bold]{release_tag}[/bold]"
     )
-
-    output = Text()
-    panel_content = "\n".join(sections)
-    panel_content += "\n"
 
     console.print()
     console.print(Panel(title, box=box.DOUBLE, style="cyan", expand=True))

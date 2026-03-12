@@ -1,11 +1,10 @@
-from typing import Optional
 import httpx
 
 from hubtracktw.models import Repo
 
 
 class GitHubClient:
-    def __init__(self, base_url: str, token: Optional[str] = None):
+    def __init__(self, base_url: str, token: str | None = None):
         self.base_url = base_url
         self.token = token
         self.headers = {}

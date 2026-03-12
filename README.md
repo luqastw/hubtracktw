@@ -63,6 +63,14 @@ Data flows in a single direction: the CLI layer delegates to the client, which r
 - A network connection to reach `api.github.com`
 - (Optional) A GitHub personal access token for higher rate limits
 
+To authenticate, export your token before running the tool:
+
+```bash
+export GITHUB_TOKEN=ghp_yourtoken
+```
+
+The client reads `GITHUB_TOKEN` from the environment automatically.
+
 ## Installation
 
 ```bash

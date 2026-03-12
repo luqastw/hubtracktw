@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
@@ -13,8 +12,8 @@ class Repo:
     created_at: str
     pushed_at: str
     default_branch: str
-    language: Optional[str] = None
+    language: str | None = None
     archived: bool = False
     languages: dict[str, int] = field(default_factory=dict)
     contributors_count: int = 0
-    latest_release: Optional[str] = None
+    latest_release: str | None = None

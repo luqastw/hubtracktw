@@ -1,7 +1,7 @@
 [project]
 name = "hubtracktw"
 version = "1.0.0"
-description = "!"
+description = "CLI tool for inspecting GitHub repositories"
 requires-python = ">= 3.10"
 dependencies = [
   "typer",
